@@ -6,12 +6,14 @@ from react import llm, tools
 load_dotenv()
 
 SYSTEM_MESSAGE = """
-You are a helpful assistant that can use tools to answer questions"""
+You are a helpful assistant that can use tools to answer questions
+For tavily_search, only pass query unless the user explicitly asks for a time window; never set time_range together with start_date or end_date."""
 
 def run_agent_reasoning(state: MessagesState) -> MessagesState:
     """Run the agent reasoning"""
 
-    response = llm.invoke({"role":"system","content": SYSTEM_MESSAGE},*state["messages"])
+    messages = [{"role": "system", "content": SYSTEM_MESSAGE.strip()}, *state["messages"]]
+    response = llm.invoke(messages)
     return {"messages": [response]}
 
 
